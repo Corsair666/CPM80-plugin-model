@@ -302,6 +302,52 @@ iMac (10.0.60.226) ── Dashboard Server
 | `--influxdb-org` | `cpm80` | InfluxDB Organization |
 | `--influxdb-bucket` | `power_readings` | InfluxDB Bucket |
 
+## 桌面 App (pywebview)
+
+使用 pywebview 將 Dashboard 包裝為 macOS 原生桌面應用程式（WebKit 視窗），不需要外部瀏覽器。
+
+### 安裝
+
+```bash
+pip install pywebview
+# 或透過 requirements.txt 一次安裝所有依賴
+pip install -r requirements.txt
+```
+
+### 啟動
+
+```bash
+# 預設 Demo 模式（不需要實體電表）
+python cpm80_desktop.py
+
+# 連接實體電表
+python cpm80_desktop.py --no-demo --host-a 10.0.60.21 --host-b 10.0.60.22
+
+# 指定 port
+python cpm80_desktop.py --port 9090
+```
+
+### 桌面 App 專用參數
+
+| 參數 | 預設值 | 說明 |
+|------|--------|------|
+| `--no-demo` | — | 連接實體電表（預設為 Demo 模式） |
+| `--port` | `8088` | 內部 server port |
+| `--host-a` | `10.0.60.21` | 電表 A IP |
+| `--host-b` | `10.0.60.22` | 電表 B IP |
+| `--ollama-url` | `http://10.0.60.180:11434` | Ollama API URL |
+| `--ollama-model` | `qwen2.5:14b` | Ollama 模型名稱 |
+
+### 設計特點
+
+- 視窗大小 1280×820，最小 800×600
+- macOS 保留系統標題列（紅綠燈按鈕）
+- 強制綁定 `127.0.0.1`，不對外開放
+- 關閉視窗後 process 完全結束（無殘留）
+- 所有 Dashboard 功能完整保留（即時監控、趨勢、AI 分析等）
+
+---
+
 ## 安裝與啟動
 
 ### 環境需求
@@ -356,6 +402,7 @@ CPM80-plugin-model/
 │                                   #   負載曲線分析、異常偵測、費率優化、
 │                                   #   AI 分析、Demo 模式、Light/Dark 主題、
 │                                   #   HTML/CSS/Vue 3/ECharts 前端
+├── cpm80_desktop.py                # pywebview 桌面啟動器（macOS 原生視窗）
 ├── cpm80_reader_all_wireFun_duo.py # CLI — 雙電表並排顯示 + 合計
 ├── requirements.txt                # Python 依賴套件
 ├── docs/                           # 原廠文件與現場照片
